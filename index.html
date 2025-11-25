@@ -3,76 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Arena Ultimate</title>
-    
-    <!-- Fonts -->
+    <title>x bot</title>
+    <link rel="icon" type="image/png" href="search.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
     <style>
-        /* --- SOLID THEME (No Glass) --- */
+        /* --- THEME: FRESH LIGHT (NO GRADIENTS) --- */
         :root {
-            --bg-page: #f9fafb;         /* Lightest Gray Page */
-            --bg-surface: #ffffff;      /* Pure White Surface */
-            --border: #e5e7eb;          /* Crisp Border */
-            --text-main: #111827;       /* Near Black */
-            --text-sub: #6b7280;        /* Medium Gray */
-            --primary: #2563eb;         /* Solid Blue */
+            --bg: #ffffff;
+            --surf: #f8fafc;
+            --bord: #e2e8f0;
+            --text: #0f172a;
+            --dim: #64748b;
+            --acc: #3b82f6; /* Solid Blue */
             
             /* Solid Brand Colors */
-            --c-groq: #ea580c; 
-            --c-samba: #7c3aed; 
-            --c-gem: #2563eb; 
-            --c-poll: #059669; 
-            --c-cf: #d97706; 
-            --c-free: #db2777;
+            --c-g1: #f97316; --c-g2: #ea580c; --c-sb: #8b5cf6; 
+            --c-gm: #3b82f6; --c-pl: #10b981; --c-cf: #eab308; --c-fr: #ec4899;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             margin: 0; 
-            background: var(--bg-page); 
-            color: var(--text-main); 
+            background: var(--bg); 
+            color: var(--text); 
             font-family: 'Inter', sans-serif; 
             height: 100vh; 
             display: grid; 
-            grid-template-rows: 1fr auto; /* Chat area takes space, Dock is auto */
+            grid-template-rows: 1fr auto; 
             overflow: hidden; 
         }
 
-        /* --- DESKTOP LAYOUT (Horizontal Scroll) --- */
-        .arena { 
+        /* --- SCROLLBARS (Slim & Beautiful) --- */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- DESKTOP LAYOUT --- */
+        .desktop-arena { 
             display: flex; 
+            flex: 1; 
             overflow-x: auto; 
             overflow-y: hidden; 
             scroll-snap-type: x mandatory; 
             height: 100%; 
-            padding-bottom: 0;
-            background: var(--bg-page);
         }
-        
+
         .col { 
-            min-width: 400px; 
-            max-width: 400px; 
+            min-width: 380px; 
+            max-width: 380px; 
             height: 100%; 
             display: flex; 
             flex-direction: column; 
-            border-right: 1px solid var(--border); 
-            background: var(--bg-surface); 
+            border-right: 1px solid var(--bord); 
+            background: var(--surf); 
             scroll-snap-align: start; 
         }
-        
-        /* Solid Header */
+
         .col-head { 
             padding: 16px; 
             font-size: 12px; 
             font-weight: 700; 
             text-transform: uppercase; 
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border); 
-            background: var(--bg-surface); 
-            color: var(--text-sub); 
+            border-bottom: 1px solid var(--bord); 
+            background: #ffffff; 
+            color: var(--dim); 
             text-align: center; 
             display: flex; 
             align-items: center; 
@@ -83,361 +80,374 @@
             z-index: 10;
         }
 
-        /* --- CHAT AREA --- */
-        .msgs { 
+        /* --- MOBILE LAYOUT --- */
+        .mobile-view { 
+            display: none; 
+            flex-direction: column; 
+            height: 100dvh; 
+            width: 100%; 
+            position: relative; 
+            background: #ffffff; 
+            color: #111; 
+        }
+        
+        /* Mobile Header (Solid Color) */
+        .mob-head { 
+            height: 60px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-shrink: 0;
+            background: #ffffff; 
+            border-bottom: 1px solid var(--bord); 
+            width: 100%; 
+            z-index: 20;
+        }
+        .mob-logo { 
+            font-family: 'Space Grotesk', sans-serif; 
+            font-weight: 700; 
+            font-size: 20px; 
+            color: #13925e; 
+            letter-spacing: -0.5px;
+        }
+
+        /* Mobile Chat Area */
+        .mob-chat-area { 
             flex: 1; 
             overflow-y: auto; 
-            padding: 20px; 
+            padding: 20px 20px 20px 20px; 
             scroll-behavior: smooth; 
-            background: var(--bg-surface);
+            background: #f8fafc;
         }
-        
-        .msg { margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px; }
 
+        /* --- MESSAGES (Shared) --- */
+        .msgs { flex: 1; overflow-y: auto; padding: 20px; scroll-behavior: smooth; }
+        .msg { margin-bottom: 24px; display: flex; flex-direction: column; gap: 10px; }
+        
+        /* Desktop Bubbles (Light Theme) */
         .u-bub { 
             align-self: flex-end; 
-            background: var(--primary); 
+            background: #13925e; 
             color: #fff; 
-            padding: 12px 16px; 
-            border-radius: 18px 18px 4px 18px; 
-            font-size: 15px; 
+            padding: 10px 16px; 
+            border-radius: 18px 18px 0 18px; 
+            font-size: 14px; 
             max-width: 85%; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            line-height: 1.5;
         }
-        
         .a-bub { 
             align-self: flex-start; 
-            color: var(--text-main); 
-            font-size: 15px; 
+            background: #ffffff; 
+            border: 1px solid var(--bord);
+            color: var(--text); 
+            font-size: 14px; 
             line-height: 1.6; 
             max-width: 95%; 
-            padding: 0 4px;
+            padding: 10px 14px;
+            border-radius: 18px 18px 18px 0;
         }
         
+        /* Mobile Bubbles (Colorful & Clean) */
+        .mobile-view .u-bub { 
+            background: #13925e; 
+            color: #fff; 
+            border-radius: 22px 22px 4px 22px; 
+            font-size: 16px; 
+            padding: 12px 18px;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+        }
+        .mobile-view .a-bub { 
+            background: #ffffff; 
+            border: 1px solid #e2e8f0; 
+            color: #1f2937; 
+            padding: 14px 18px; 
+            border-radius: 22px 22px 22px 4px; 
+            font-size: 16px; 
+            line-height: 1.6; 
+            max-width: 95%; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
         /* Markdown */
-        .a-bub p { margin: 0 0 12px 0; }
-        .a-bub strong { font-weight: 700; color: #000; }
-        .a-bub code { background: #f3f4f6; padding: 2px 6px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; color: #d946ef; font-size: 13px; border: 1px solid #e5e7eb; }
-        .a-bub pre { background: #1e293b; color: #f8fafc; padding: 16px; border-radius: 12px; overflow-x: auto; margin: 12px 0; border: 1px solid #334155; }
-
-        .think { color: #9ca3af; font-style: italic; font-size: 13px; display: flex; align-items: center; gap: 6px; }
+        code { background: #f1f5f9; padding: 2px 5px; border-radius: 4px; font-family: monospace; color: #d946ef; border: 1px solid #e2e8f0; }
+        pre { background: #1e293b; color: #f8fafc; padding: 15px; border-radius: 10px; overflow-x: auto; }
+        
+        .think { color: #94a3b8; font-style: italic; font-size: 12px; display: flex; gap: 6px; align-items: center; }
         .think::after { content: '●'; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        @keyframes blink { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        /* --- DESKTOP DOCK --- */
+        /* --- DOCK (Desktop) --- */
         .dock-wrap { 
             padding: 20px; 
             display: flex; 
             justify-content: center; 
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border);
-            z-index: 20; 
+            background: #ffffff; 
+            border-top: 1px solid var(--bord);
+            position: relative; 
+            z-index: 30; flex-shrink: 0;
         }
-        
         .dock-inner { 
             width: 100%; max-width: 900px; 
             display: flex; align-items: center; gap: 12px; 
-            background: #fff; padding: 6px; 
-            border: 1px solid var(--border); 
-            border-radius: 16px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: #f8fafc; padding: 8px; 
+            border: 1px solid var(--bord); 
+            border-radius: 20px; 
+        }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; padding-left: 12px; color: #13925e; }
+
+        /* --- MOBILE DOCK (Bigger & Smoother) --- */
+        .mob-dock-wrap {
+            padding: 16px 20px; 
+            background: #ffffff; 
+            border-top: 1px solid #e5e7eb;
+            flex-shrink: 0; 
+            z-index: 30;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.02);
+        }
+        .mob-dock-inner {
+            display: flex; gap: 12px; align-items: center; 
         }
 
-        .logo { 
-            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; 
-            padding-left: 16px; color: #111; letter-spacing: -0.5px;
-        }
-
-        .inp-box { 
-            flex: 1; background: #f9fafb; border: 1px solid transparent; 
-            border-radius: 12px; display: flex; padding: 6px; transition: all 0.2s; 
-        }
-        .inp-box:focus-within { background: #fff; border-color: #d1d5db; box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
-
+        /* Inputs */
+        .inp-box { flex: 1; display: flex; }
         input { 
-            flex: 1; background: transparent; border: none; padding: 10px 12px; 
-            font-size: 16px; outline: none; color: var(--text-main); font-family: inherit; 
+            flex: 1; background: transparent; border: none; padding: 10px; 
+            font-size: 16px; outline: none; color: inherit; font-family: inherit; 
         }
         
+        /* Mobile Input Specifics (Bigger/Beautiful) */
+        .mobile-view .inp-box {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 30px; /* Maximum roundness */
+            padding: 4px 8px 4px 20px;
+            height: 50px; /* Taller input */
+            align-items: center;
+        }
+        .mobile-view input { font-size: 16px; color: #000; }
+
         button { 
-            background: #111; color: #fff; border: none; width: 42px; height: 42px; 
-            border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; 
-            transition: transform 0.1s;
+            background: #13925e; color: #fff; border: none; width: 40px; height: 40px; 
+            border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; 
         }
-        button:active { transform: scale(0.96); }
-
-        /* --- MOBILE SPECIFIC STYLES --- */
-        .mob-head { display: none; }
-        .mob-btn { display: none; }
-        .menu-overlay { display: none; }
-
-        @media (max-width: 768px) {
-            body { grid-template-rows: 54px 1fr auto; }
-
-            /* 1. Mobile Header (Solid White) */
-            .mob-head { 
-                display: flex; height: 54px; align-items: center; justify-content: center;
-                background: #ffffff; border-bottom: 1px solid var(--border); 
-                position: fixed; top: 0; width: 100%; z-index: 30;
-            }
-            .mob-logo { 
-                font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; 
-                color: #111; letter-spacing: -0.5px;
-            }
-
-            /* 2. Mobile Columns */
-            .col { min-width: 100%; display: none; border: none; background: #fff; }
-            .col.active { display: flex; }
-            .col-head { display: none; } /* Header hidden, moved to Menu Button */
-
-            /* 3. Mobile Dock */
-            .dock-wrap { padding: 12px 16px; background: #ffffff; border-top: 1px solid var(--border); }
-            .dock-inner { border: none; padding: 0; box-shadow: none; border-radius: 0; gap: 10px; }
-            .logo { display: none; } /* Hide Desktop Logo */
-
-            /* 4. Mobile Model Button (Pill) */
-            .mob-btn { 
-                display: flex; height: 44px; padding: 0 16px; 
-                background: #f3f4f6; border-radius: 22px; /* Pill Shape */
-                font-size: 14px; font-weight: 600; color: #374151; 
-                cursor: pointer; align-items: center; gap: 8px; 
-                border: 1px solid #e5e7eb; flex-shrink: 0;
-                transition: background 0.2s;
-            }
-            .mob-btn:active { background: #e5e7eb; }
-            .mob-btn::after { content: '▾'; font-size: 10px; opacity: 0.5; margin-top: 2px; }
-
-            .inp-box { border-radius: 22px; padding: 4px 4px 4px 16px; }
-            button { border-radius: 18px; width: 36px; height: 36px; }
+        .mobile-view button { 
+            border-radius: 50%; width: 42px; height: 42px; 
+            background: #13925e; /* High contrast send button */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        /* --- BEAUTIFUL MOBILE MENU (Solid Sheet) --- */
-        .menu-overlay {
-            display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 40; opacity: 0; pointer-events: none;
-            transition: opacity 0.2s ease;
+        /* --- MOBILE MENU (Beautiful Card Sheet) --- */
+        .mob-btn { 
+            padding: 0 16px; height: 50px; /* Match input height */
+            background: #fff; border-radius: 25px; 
+            font-size: 14px; font-weight: 700; color: #333; cursor: pointer; 
+            display: flex; align-items: center; gap: 8px; 
+            border: 1px solid #e5e7eb; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            white-space: nowrap;
+        }
+        .mob-btn::after { content: '▼'; font-size: 10px; color: #999; }
+        
+        .menu-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.2); z-index: 40; opacity: 0; pointer-events: none; 
+            transition: 0.3s; backdrop-filter: blur(4px); 
         }
         .menu-overlay.open { opacity: 1; pointer-events: all; }
-
-        .menu-sheet {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: #ffffff; 
-            border-top-left-radius: 20px; border-top-right-radius: 20px;
-            padding: 24px 20px 40px 20px; /* Extra padding at bottom */
-            z-index: 50; transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.2, 1);
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-            display: flex; flex-direction: column; gap: 16px;
+        
+        .menu-sheet { 
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; 
+            border-top-left-radius: 28px; border-top-right-radius: 28px; 
+            padding: 30px 24px 40px 24px; z-index: 50; transform: translateY(100%); 
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); 
+            box-shadow: 0 -10px 50px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 16px;
         }
         .menu-sheet.open { transform: translateY(0); }
 
-        .menu-header { text-align: center; margin-bottom: 8px; }
-        .menu-bar { width: 40px; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 0 auto 16px auto; }
-        .menu-title { font-size: 13px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Grid of Pills */
-        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-
-        .menu-opt {
-            padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 600;
-            text-align: center; cursor: pointer; 
-            background: #f9fafb; border: 1px solid #e5e7eb; 
-            color: #4b5563; transition: all 0.2s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
+        .menu-header { text-align: center; font-size: 13px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
         
-        .menu-opt .dot { width: 8px; height: 8px; border-radius: 50%; }
-
-        /* Active State (Solid Color) */
-        .menu-opt.active {
-            background: #111827; color: #fff; border-color: #111827;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        
+        .menu-item { 
+            padding: 16px; border-radius: 16px; font-size: 14px; font-weight: 600; 
+            text-align: center; cursor: pointer; background: #ffffff; 
+            border: 1px solid #e5e7eb; transition: 0.2s; 
+            color: var(--text);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
-        .menu-opt.active .dot { box-shadow: 0 0 0 2px #fff; }
+        .menu-item.active { 
+            background: #eff6ff; color: var(--acc); border-color: var(--acc); 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
 
-        /* Brand Colors for Dots */
-        .c-g1 .dot { background: #f97316; } 
-        .c-g2 .dot { background: #ea580c; }
-        .c-sb .dot { background: #7c3aed; }
-        .c-gm .dot { background: #2563eb; }
-        .c-pl .dot { background: #059669; }
-        .c-cf .dot { background: #d97706; }
-        .c-fr .dot { background: #db2777; }
+        /* COLORS */
+        .b-1 { border-top: 3px solid var(--c-g1); } .c-1 { background: var(--c-g1); }
+        .b-2 { border-top: 3px solid var(--c-g1); } .c-2 { background: var(--c-g1); }
+        .b-3 { border-top: 3px solid var(--c-g1); } .c-3 { background: var(--c-g1); }
+        .b-4 { border-top: 3px solid var(--c-g2); } .c-4 { background: var(--c-g2); }
+        .b-5 { border-top: 3px solid var(--c-g2); } .c-5 { background: var(--c-g2); }
+        .b-6 { border-top: 3px solid var(--c-g2); } .c-6 { background: var(--c-g2); }
+        .b-7 { border-top: 3px solid var(--c-sb); } .c-7 { background: var(--c-sb); }
+        .b-8 { border-top: 3px solid var(--c-gm); } .c-8 { background: var(--c-gm); }
+        .b-9 { border-top: 3px solid var(--c-pl); } .c-9 { background: var(--c-pl); }
+        .b-10 { border-top: 3px solid var(--c-cf); } .c-10 { background: var(--c-cf); }
+        .b-11 { border-top: 3px solid var(--c-fr); } .c-11 { background: var(--c-fr); }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
 
-        /* Borders */
-        .b-g1 { border-top: 3px solid var(--c-groq); }
-        .b-g2 { border-top: 3px solid var(--c-groq); }
-        .b-sb { border-top: 3px solid var(--c-samba); }
-        .b-gm { border-top: 3px solid var(--c-gem); }
-        .b-pl { border-top: 3px solid var(--c-poll); }
-        .b-cf { border-top: 3px solid var(--c-cf); }
-        .b-fr { border-top: 3px solid var(--c-free); }
-
-        /* Custom Scrollbars */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-
+        /* RESPONSIVE SWITCHING */
         @media (max-width: 768px) {
-            /* Mobile overrides handled above */
+            .desktop-arena, .dock-wrap { display: none !important; }
+            .mobile-view { display: flex; }
+        }
+        @media (min-width: 769px) {
+            .mobile-view { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-<!-- MOBILE HEADER -->
-<div class="mob-head">
-    <div class="mob-logo">AI ARENA</div>
+<!-- === MOBILE VIEW === -->
+<div class="mobile-view">
+    <div class="mob-head">
+        <div class="mob-logo">x.11</div>
+    </div>
+    
+    <div class="mob-chat-area" id="mobChat">
+        <!-- Chat bubbles appear here -->
+    </div>
+
+    <div class="mob-dock-wrap">
+        <div class="mob-dock-inner">
+            <div class="mob-btn" id="mobLabel" onclick="toggleMenu()">Llama 3.3</div>
+            <div class="inp-box">
+                <input type="text" id="inMob" placeholder="Ask..." autofocus>
+                <button onclick="sendMobile()">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- MOBILE MENU SHEET -->
+<!-- MOBILE MENU -->
 <div class="menu-overlay" id="overlay" onclick="toggleMenu()"></div>
 <div class="menu-sheet" id="menu">
-    <div class="menu-header">
-        <div class="menu-bar"></div>
-        <div class="menu-title">Choose Model</div>
-    </div>
+    <div class="menu-header">SELECT MODEL</div>
     <div class="menu-grid">
-        <div class="menu-opt c-g1 active" onclick="sw('c1', 'Llama 3.3', this)"><div class="dot"></div>Llama 3.3</div>
-        <div class="menu-opt c-g1" onclick="sw('c2', 'Kimi K2', this)"><div class="dot"></div>Kimi K2</div>
-        <div class="menu-opt c-g1" onclick="sw('c3', 'ALLaM 7B', this)"><div class="dot"></div>ALLaM 7B</div>
-        <div class="menu-opt c-g2" onclick="sw('c4', 'Qwen 3', this)"><div class="dot"></div>Qwen 3</div>
-        <div class="menu-opt c-g2" onclick="sw('c5', 'Compound', this)"><div class="dot"></div>Compound</div>
-        <div class="menu-opt c-g2" onclick="sw('c6', 'GPT-OSS', this)"><div class="dot"></div>GPT-OSS</div>
-        <div class="menu-opt c-sb" onclick="sw('c7', 'Samba 405B', this)"><div class="dot"></div>Samba 405B</div>
-        <div class="menu-opt c-gm" onclick="sw('c8', 'Gemini 2.0', this)"><div class="dot"></div>Gemini 2.0</div>
-        <div class="menu-opt c-pl" onclick="sw('c9', 'GPT-4o', this)"><div class="dot"></div>GPT-4o</div>
-        <div class="menu-opt c-cf" onclick="sw('c10', 'Llama 3.2', this)"><div class="dot"></div>Llama 3.2</div>
-        <div class="menu-opt c-fr" onclick="sw('c11', 'ApiFree', this)"><div class="dot"></div>ApiFree</div>
+        <div class="menu-item active" onclick="swMob('groq_llama', 'Llama 3.3', this)">Llama 3.3</div>
+        <div class="menu-item" onclick="swMob('groq_kimi', 'Kimi K2', this)">Kimi K2</div>
+        <div class="menu-item" onclick="swMob('groq_allam', 'ALLaM 7B', this)">ALLaM 7B</div>
+        <div class="menu-item" onclick="swMob('groq_qwen', 'Qwen 3', this)">Qwen 3</div>
+        <div class="menu-item" onclick="swMob('groq_compound', 'Compound', this)">Compound</div>
+        <div class="menu-item" onclick="swMob('groq_gptoss', 'GPT-OSS', this)">GPT-OSS</div>
+        <div class="menu-item" onclick="swMob('samba', 'Samba 70B', this)">Samba 70B</div>
+        <div class="menu-item" onclick="swMob('gemini', 'Gemini 2.0', this)">Gemini 2.0</div>
+        <div class="menu-item" onclick="swMob('poll', 'GPT-4o', this)">GPT-4o</div>
+        <div class="menu-item" onclick="swMob('cf', 'Llama 3.2', this)">Llama 3.2</div>
+        <div class="menu-item" onclick="swMob('free', 'ApiFree', this)">ApiLLMFree</div>
     </div>
 </div>
 
-<!-- ARENA -->
-<div class="arena">
-    <!-- GROQ 1 -->
-    <div class="col active" id="c1"><div class="col-head b-g1">Llama 3.3 (Groq 1)</div><div class="msgs" id="out-groq_llama"></div></div>
-    <div class="col" id="c2"><div class="col-head b-g1">Kimi K2 (Groq 1)</div><div class="msgs" id="out-groq_kimi"></div></div>
-    <div class="col" id="c3"><div class="col-head b-g1">ALLaM 7B (Groq 1)</div><div class="msgs" id="out-groq_allam"></div></div>
-
-    <!-- GROQ 2 -->
-    <div class="col" id="c4"><div class="col-head b-g2">Qwen 3 (Groq 2)</div><div class="msgs" id="out-groq_qwen"></div></div>
-    <div class="col" id="c5"><div class="col-head b-g2">Compound (Groq 2)</div><div class="msgs" id="out-groq_compound"></div></div>
-    <div class="col" id="c6"><div class="col-head b-g2">GPT-OSS (Groq 2)</div><div class="msgs" id="out-groq_gptoss"></div></div>
-
-    <!-- OTHERS -->
-    <div class="col" id="c7"><div class="col-head b-sb">SambaNova (405B)</div><div class="msgs" id="out-samba"></div></div>
-    <div class="col" id="c8"><div class="col-head b-gm">Gemini 2.0</div><div class="msgs" id="out-gemini"></div></div>
-    <div class="col" id="c9"><div class="col-head b-pl">GPT-4o (Poll)</div><div class="msgs" id="out-poll"></div></div>
-    <div class="col" id="c10"><div class="col-head b-cf">Llama 3.2 (CF)</div><div class="msgs" id="out-cf"></div></div>
-    <div class="col" id="c11"><div class="col-head b-fr">ApiFreeLLM</div><div class="msgs" id="out-free"></div></div>
+<!-- === DESKTOP VIEW === -->
+<div class="desktop-arena">
+    <div class="col" id="c1"><div class="col-head b-1"><div class="dot c-1"></div>&nbsp;Llama 3.3</div><div class="msgs" id="dt-groq_llama"></div></div>
+    <div class="col" id="c2"><div class="col-head b-1"><div class="dot c-1"></div>&nbsp;Kimi K2</div><div class="msgs" id="dt-groq_kimi"></div></div>
+    <div class="col" id="c3"><div class="col-head b-1"><div class="dot c-1"></div>&nbsp;ALLaM 7B</div><div class="msgs" id="dt-groq_allam"></div></div>
+    <div class="col" id="c4"><div class="col-head b-4"><div class="dot c-4"></div>&nbsp;Qwen 3</div><div class="msgs" id="dt-groq_qwen"></div></div>
+    <div class="col" id="c5"><div class="col-head b-4"><div class="dot c-4"></div>&nbsp;Compound</div><div class="msgs" id="dt-groq_compound"></div></div>
+    <div class="col" id="c6"><div class="col-head b-4"><div class="dot c-4"></div>&nbsp;GPT-OSS</div><div class="msgs" id="dt-groq_gptoss"></div></div>
+    <div class="col" id="c7"><div class="col-head b-7"><div class="dot c-7"></div>&nbsp;Samba 70B</div><div class="msgs" id="dt-samba"></div></div>
+    <div class="col" id="c8"><div class="col-head b-8"><div class="dot c-8"></div>&nbsp;Gemini 2.0</div><div class="msgs" id="dt-gemini"></div></div>
+    <div class="col" id="c9"><div class="col-head b-9"><div class="dot c-9"></div>&nbsp;GPT-4o</div><div class="msgs" id="dt-poll"></div></div>
+    <div class="col" id="c10"><div class="col-head b-10"><div class="dot c-10"></div>&nbsp;Llama 3.2</div><div class="msgs" id="dt-cf"></div></div>
+    <div class="col" id="c11"><div class="col-head b-11"><div class="dot c-11"></div>&nbsp;ApiLLMFree</div><div class="msgs" id="dt-free"></div></div>
 </div>
 
-<!-- BOTTOM DOCK -->
+<!-- DESKTOP DOCK -->
 <div class="dock-wrap">
     <div class="dock-inner">
-        <div class="logo">AI ARENA</div>
-        
-        <!-- Mobile Pill Trigger -->
-        <div class="mob-btn" id="mobLabel" onclick="toggleMenu()">Llama 3.3</div>
-
+        <div class="logo">x.11</div>
         <div class="inp-box">
-            <input type="text" id="in" placeholder="Ask 11 models..." autofocus>
-            <button onclick="send()">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+            <input type="text" id="inDesk" placeholder="Ask 11 models..." autofocus>
+            <button onclick="sendDesktop()">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
             </button>
         </div>
     </div>
 </div>
 
 <script>
-    const input = document.getElementById('in');
-    input.addEventListener("keypress", (e) => { if (e.key === "Enter") send(); });
+    // INPUT LISTENERS
+    document.getElementById('inDesk').addEventListener("keypress", (e) => { if (e.key === "Enter") sendDesktop(); });
+    document.getElementById('inMob').addEventListener("keypress", (e) => { if (e.key === "Enter") sendMobile(); });
 
-    // MEMORY
-    const chats = { 
-        'groq_llama': [], 'groq_kimi': [], 'groq_allam': [],
-        'groq_qwen': [], 'groq_compound': [], 'groq_gptoss': [],
-        'samba': [], 'gemini': [], 'poll': [], 'cf': [], 'free': [] 
-    };
+    // STATE
+    let activeMobEp = 'groq_llama';
+    let mobHistory = []; 
+    const dtHistories = { 'groq_llama': [], 'groq_kimi': [], 'groq_allam': [], 'groq_qwen': [], 'groq_compound': [], 'groq_gptoss': [], 'samba': [], 'gemini': [], 'poll': [], 'cf': [], 'free': [] };
 
+    // MENU LOGIC
     function toggleMenu() {
         document.getElementById('menu').classList.toggle('open');
         document.getElementById('overlay').classList.toggle('open');
     }
 
-    function sw(id, name, el) {
-        // Desktop Logic
-        document.querySelectorAll('.col').forEach(c => c.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        
-        // Mobile Button Update
+    function swMob(ep, name, el) {
+        activeMobEp = ep;
         document.getElementById('mobLabel').innerText = name;
-        
-        // Menu Selection Logic
-        document.querySelectorAll('.menu-opt').forEach(i => i.classList.remove('active'));
+        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
-        
         toggleMenu();
     }
 
-    // TYPING ENGINE (ApiFree)
-    const tq = { 'free': [] };
-    setInterval(() => {
-        if (tq['free'].length > 0) {
-            const el = document.getElementById('out-free').lastElementChild?.querySelector('.a-bub');
-            if (el) { 
-                const txt = tq['free'].splice(0, 5).join('');
-                const cur = el.getAttribute('data-raw') || "";
-                const next = cur + txt;
-                el.setAttribute('data-raw', next);
-                el.innerHTML = marked.parse(next);
-                el.closest('.msgs').scrollTop = 99999;
-                if(el.classList.contains('think')) el.classList.remove('think');
-            }
-        }
-    }, 15);
-
-    function send() {
-        const txt = input.value.trim();
+    // --- DESKTOP SEND (Broadcast) ---
+    function sendDesktop() {
+        const inp = document.getElementById('inDesk');
+        const txt = inp.value.trim();
         if (!txt) return;
-        input.value = "";
+        inp.value = "";
 
-        const map = [
-            { id: 'out-groq_llama', ep: 'groq_llama', col: 'c1' },
-            { id: 'out-groq_kimi', ep: 'groq_kimi', col: 'c2' },
-            { id: 'out-groq_allam', ep: 'groq_allam', col: 'c3' },
-            { id: 'out-groq_qwen', ep: 'groq_qwen', col: 'c4' },
-            { id: 'out-groq_compound', ep: 'groq_compound', col: 'c5' },
-            { id: 'out-groq_gptoss', ep: 'groq_gptoss', col: 'c6' },
-            { id: 'out-samba', ep: 'samba', col: 'c7' },
-            { id: 'out-gemini', ep: 'gemini', col: 'c8' },
-            { id: 'out-poll', ep: 'poll', col: 'c9' },
-            { id: 'out-cf', ep: 'cf', col: 'c10' },
-            { id: 'out-free', ep: 'free', col: 'c11' }
-        ];
-
-        map.forEach(cfg => {
-            const box = document.getElementById(cfg.id);
-            chats[cfg.ep].push({ role: "user", content: txt });
+        Object.keys(dtHistories).forEach(ep => {
+            const box = document.getElementById(`dt-${ep}`);
+            dtHistories[ep].push({ role: "user", content: txt });
 
             const d = document.createElement('div');
             d.className = 'msg';
-            d.innerHTML = `<div class="u-bub">${txt}</div><div class="a-bub think" data-raw="">Thinking...</div>`;
+            d.innerHTML = `<div class="u-bub">${txt}</div><div class="a-bub think">Thinking...</div>`;
             box.appendChild(d);
             box.scrollTop = box.scrollHeight;
 
-            if (cfg.ep === 'free') typer(cfg.ep, cfg.id);
-            else stream(cfg.ep, cfg.id);
+            if (ep === 'free') typer(ep, d.querySelector('.a-bub'), dtHistories[ep], false);
+            else streamer(ep, d.querySelector('.a-bub'), dtHistories[ep], false);
         });
     }
 
-    async function stream(ep, id) {
-        const box = document.getElementById(id);
-        const el = box.lastElementChild.querySelector('.a-bub');
+    // --- MOBILE SEND (Single Focus) ---
+    function sendMobile() {
+        const inp = document.getElementById('inMob');
+        const txt = inp.value.trim();
+        if (!txt) return;
+        inp.value = "";
+
+        const box = document.getElementById('mobChat');
+        mobHistory.push({ role: "user", content: txt });
+
+        const d = document.createElement('div');
+        d.className = 'msg';
+        d.innerHTML = `<div class="u-bub">${txt}</div><div class="a-bub think">Thinking...</div>`;
+        box.appendChild(d);
+        box.scrollTop = box.scrollHeight;
+
+        const el = d.querySelector('.a-bub');
+        if (activeMobEp === 'free') typer(activeMobEp, el, mobHistory, true);
+        else streamer(activeMobEp, el, mobHistory, true);
+    }
+
+    // --- ENGINES ---
+    async function streamer(ep, el, history, isMob) {
         let full = "";
         try {
-            const res = await fetch(`/chat/${ep}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({messages: chats[ep]}) });
+            const res = await fetch(`/chat/${ep}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({messages: history}) });
             const reader = res.body.getReader();
             const dec = new TextDecoder();
             let first = true;
@@ -448,21 +458,48 @@
                 const chunk = dec.decode(value);
                 full += chunk;
                 el.innerHTML = marked.parse(full);
-                box.scrollTop = box.scrollHeight;
+                
+                // Scroll correct container
+                if(isMob) document.getElementById('mobChat').scrollTop = 99999;
+                else el.closest('.msgs').scrollTop = 99999;
             }
-            chats[ep].push({ role: "assistant", content: full });
+            history.push({ role: "assistant", content: full });
         } catch (e) { el.innerText = `Error: ${e.message}`; }
     }
 
-    async function typer(ep, id) {
-        const box = document.getElementById(id);
-        const el = box.lastElementChild.querySelector('.a-bub');
+    const tq = { 'free': [] };
+    setInterval(() => {
+        if (tq['free'].length > 0) {
+            // Find active free bubble (mobile or desktop)
+            const id = document.querySelector('.mobile-view').style.display !== 'none' ? 'mobChat' : 'dt-free';
+            const container = document.getElementById(id);
+            if (container) {
+               const el = container.lastElementChild?.querySelector('.a-bub');
+               if (el) { 
+                   const txt = tq['free'].splice(0, 5).join('');
+                   if(typeof marked !== 'undefined') {
+                       const cur = el.getAttribute('data-raw') || "";
+                       const next = cur + txt;
+                       el.setAttribute('data-raw', next);
+                       el.innerHTML = marked.parse(next);
+                   } else { el.innerText += txt; }
+                   
+                   const scrollArea = document.querySelector('.mobile-view').style.display !== 'none' ? 
+                                    document.getElementById('mobChat') : 
+                                    el.closest('.msgs');
+                   if(scrollArea) scrollArea.scrollTop = 99999;
+               }
+            }
+        }
+    }, 15);
+
+    async function typer(ep, el, history, isMob) {
         try {
-            const res = await fetch(`/chat/${ep}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({messages: chats[ep]}) });
+            const res = await fetch(`/chat/${ep}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({messages: history}) });
             const text = await res.text();
             el.innerHTML = ""; el.classList.remove('think');
             tq['free'].push(...text.split(''));
-            chats[ep].push({ role: "assistant", content: text });
+            history.push({ role: "assistant", content: text });
         } catch (e) { el.innerText = `Error: ${e.message}`; }
     }
 </script>
