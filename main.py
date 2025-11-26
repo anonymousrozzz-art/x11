@@ -11,12 +11,15 @@ from openai import AsyncOpenAI
 from dotenv import load_dotenv
 import google.generativeai as genai
 from fastapi import Response
+from fastapi.staticfiles import StaticFiles
 
 # Load environment variables
 load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.head("/")
 def health_head():
@@ -316,4 +319,5 @@ async def chat_endpoint(provider: str, request: Request):
         
     except Exception as e:
         return f"Server Error: {str(e)}"
+
 
