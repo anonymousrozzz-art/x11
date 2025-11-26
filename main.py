@@ -10,12 +10,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
 import google.generativeai as genai
+from fastapi import Response
 
 # Load environment variables
 load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
+
+@app.head("/")
+def health_head():
+    return Response(status_code=200)
 
 # Configure CORS to allow cross-origin requests
 app.add_middleware(
@@ -311,3 +316,4 @@ async def chat_endpoint(provider: str, request: Request):
         
     except Exception as e:
         return f"Server Error: {str(e)}"
+
